@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" build-on-make="true" name="zomazon:war">
+    <output-path>$PROJECT_DIR$/out/artifacts/zomazon_war</output-path>
+    <root id="archive" name="zomazon.war">
+      <element id="artifact" artifact-name="zomazon:war exploded" />
+    </root>
+  </artifact>
+</component>
