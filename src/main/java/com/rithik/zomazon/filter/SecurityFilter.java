@@ -120,7 +120,7 @@ public class SecurityFilter implements ContainerRequestFilter {
                 while (resultSet1.next()) {
                     role = "USER";
                     System.out.println(role);
-                    if(!uriInfo.getPath().contains(resultSet1.getString(1))) {
+                    if(!uriInfo.getPath().contains(resultSet1.getString(1)) && (!uriInfo.getPath().endsWith("user") || !uriInfo.getPath().endsWith("admin"))) {
                         return false;
                     }
                 }

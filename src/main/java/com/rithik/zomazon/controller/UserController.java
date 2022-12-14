@@ -52,4 +52,12 @@ public class UserController {
     public User updateUser(@PathParam("id") String id,User user){
         return userService.updateUser(id,user);
     }
+
+    @DELETE
+    @RolesAllowed("USER")
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public User deleteUser(@PathParam("id") String id){
+        return userService.deleteUser(id);
+    }
 }

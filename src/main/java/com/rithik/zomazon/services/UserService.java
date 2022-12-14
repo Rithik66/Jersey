@@ -104,6 +104,18 @@ public class UserService {
             System.out.println("error : updateUser");
             return new User();
         }
+        return new User(userId, body.getUser_name(), "" , "");
+    }
+
+    public User deleteUser(String userId){
+        try{
+            PreparedStatement preparedStatement = connection.prepareStatement("delete from postgres.public.user where user_id = ?");
+            preparedStatement.setString(1,userId);
+            preparedStatement.executeUpdate();
+        }catch (Exception e){
+            e.printStackTrace();
+            System.out.println("error : deleteUser");
+            return new User();}
         return new User();
     }
 }
