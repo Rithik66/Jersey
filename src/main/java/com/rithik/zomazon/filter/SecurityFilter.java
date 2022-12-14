@@ -1,7 +1,6 @@
 package com.rithik.zomazon.filter;
 
 import com.google.common.hash.Hashing;
-import com.rithik.zomazon.model.User;
 import com.rithik.zomazon.services.Connector;
 import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.PermitAll;
@@ -12,8 +11,8 @@ import jakarta.ws.rs.container.ResourceInfo;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.Provider;
-import org.json.JSONArray;
 
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
@@ -35,6 +34,8 @@ public class SecurityFilter implements ContainerRequestFilter {
 
     private static String role;
 
+    @Context
+    private UriInfo uriInfo;
     @Context
     private ResourceInfo resourceInfo;
 
@@ -85,7 +86,6 @@ public class SecurityFilter implements ContainerRequestFilter {
                     System.out.println("Allowed");
                 }
             }
-
         }
     }
     private boolean isUserAllowed(Set<String> rolesSet){
@@ -118,8 +118,11 @@ public class SecurityFilter implements ContainerRequestFilter {
                 ResultSet resultSet1 = preparedStatement1.executeQuery();
                 System.out.println("check 2");
                 while (resultSet1.next()) {
-                    role="USER";
+                    role = "USER";
                     System.out.println(role);
+                    if(!uriInfo.getPath().contains(resultSet1.getString(1))) {
+                        return false;
+                    }
                 }
             }
             if (role!=null){

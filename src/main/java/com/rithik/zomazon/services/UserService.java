@@ -67,8 +67,15 @@ public class UserService {
     public User createUser(User body){
         User user = null;
         try{
+            PreparedStatement preparedStatement1 = connection.prepareStatement("select count(*) from postgres.public.user");
+            ResultSet resultSet = preparedStatement1.executeQuery();
+            int count = 0;
+            while(resultSet.next()){
+                count = resultSet.getInt(1);
+            }
+            System.out.println(count);
             PreparedStatement preparedStatement = connection.prepareStatement("insert into postgres.public.user values(?,?,?,?)");
-            preparedStatement.setString(1,body.getUser_id());
+            preparedStatement.setString(1,"user"+(count+1));
             preparedStatement.setString(2,body.getUser_name());
             preparedStatement.setString(3, body.getUser_email());
             String sha256hex = Hashing.sha256()
@@ -88,10 +95,9 @@ public class UserService {
 
     public User updateUser(String userId,User body){
         try{
-            PreparedStatement preparedStatement = connection.prepareStatement("update postgres.public.user set user_name = ?,user_email=? where user_id = ?");
+            PreparedStatement preparedStatement = connection.prepareStatement("update postgres.public.user set user_name = ? where user_id = ?");
             preparedStatement.setString(1, body.getUser_name());
-            preparedStatement.setString(2,body.getUser_email());
-            preparedStatement.setString(3,userId);
+            preparedStatement.setString(2,userId);
             preparedStatement.executeUpdate();
         }catch(Exception e){
             e.printStackTrace();
