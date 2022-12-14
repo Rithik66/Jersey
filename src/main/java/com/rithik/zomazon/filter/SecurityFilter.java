@@ -114,6 +114,7 @@ public class SecurityFilter implements ContainerRequestFilter {
                 PreparedStatement preparedStatement1 = connection.prepareStatement("select user_id from postgres.public.user where user_email = ? and password = ?");
                 preparedStatement1.setString(1,username);
                 preparedStatement1.setString(2,password);
+                System.out.println(username+" "+password);
                 ResultSet resultSet1 = preparedStatement1.executeQuery();
                 System.out.println("check 2");
                 while (resultSet1.next()) {
