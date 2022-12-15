@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AdminService {
+
     private static AdminService adminService;
 
     private AdminService(){}
@@ -31,7 +32,7 @@ public class AdminService {
             PreparedStatement preparedStatement = connection.prepareStatement("select * from postgres.public.admin");
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
-                Admin admin = new Admin(resultSet.getString(1),resultSet.getString(2),resultSet.getString(3),resultSet.getString(4),resultSet.getString(5));
+                Admin admin = new Admin(resultSet.getString(1),resultSet.getString(2),resultSet.getString(3),resultSet.getString(4));
                 adminList.add(admin);
                 System.out.println("Admin : "+admin);
             }
@@ -51,7 +52,7 @@ public class AdminService {
             preparedStatement.setString(1,id);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
-                admin = new Admin(resultSet.getString(1),resultSet.getString(2),resultSet.getString(3),resultSet.getString(4),resultSet.getString(5));
+                admin = new Admin(resultSet.getString(1),resultSet.getString(2),resultSet.getString(3),resultSet.getString(4));
                 System.out.println("Admin : "+admin);
             }
         }
@@ -80,12 +81,11 @@ public class AdminService {
             preparedStatement.setString(1, admin.getAdmin_id());
             preparedStatement.setString(2,admin.getAdmin_name());
             preparedStatement.setString(3,admin.getAdmin_email());
-            preparedStatement.setString(4, admin.getAdmin_role());
             String pass = Hashing.sha256()
                     .hashString(admin.getAdmin_pass(), StandardCharsets.UTF_8)
                     .toString();
 
-            preparedStatement.setString(5,pass);
+            preparedStatement.setString(4,pass);
             preparedStatement.executeUpdate();
         }
         catch(Exception e){
@@ -115,12 +115,11 @@ public class AdminService {
             preparedStatement.setString(1, admin.getAdmin_id());
             preparedStatement.setString(2,admin.getAdmin_name());
             preparedStatement.setString(3,admin.getAdmin_email());
-            preparedStatement.setString(4, admin.getAdmin_role());
             String pass = Hashing.sha256()
                     .hashString(admin.getAdmin_pass(), StandardCharsets.UTF_8)
                     .toString();
 
-            preparedStatement.setString(5,pass);
+            preparedStatement.setString(4,pass);
             preparedStatement.executeUpdate();
         }
         catch(Exception e){
@@ -150,12 +149,11 @@ public class AdminService {
             preparedStatement.setString(1, admin.getAdmin_id());
             preparedStatement.setString(2,admin.getAdmin_name());
             preparedStatement.setString(3,admin.getAdmin_email());
-            preparedStatement.setString(4, admin.getAdmin_role());
             String pass = Hashing.sha256()
                     .hashString(admin.getAdmin_pass(), StandardCharsets.UTF_8)
                     .toString();
 
-            preparedStatement.setString(5,pass);
+            preparedStatement.setString(4,pass);
             preparedStatement.executeUpdate();
         }
         catch(Exception e){

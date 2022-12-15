@@ -4,17 +4,15 @@ public class Admin {
     String admin_id;
     String admin_name;
     String admin_email;
-    String admin_role;
 
     String admin_pass;
 
     private Admin() {}
 
-    public Admin(String admin_id, String admin_name, String admin_email, String admin_role,String admin_pass) {
+    public Admin(String admin_id, String admin_name, String admin_email, String admin_pass) {
         this.admin_id = admin_id;
         this.admin_name = admin_name;
         this.admin_email = admin_email;
-        this.admin_role = admin_role;
         this.admin_pass = admin_pass;
     }
 
@@ -50,21 +48,12 @@ public class Admin {
         this.admin_email = admin_email;
     }
 
-    public String getAdmin_role() {
-        return admin_role;
-    }
-
-    public void setAdmin_role(String admin_role) {
-        this.admin_role = admin_role;
-    }
-
     @Override
     public String toString() {
         return "{" +
                 "admin_id=" + admin_id +
                 ", admin_name='" + admin_name + '\'' +
                 ", admin_email='" + admin_email + '\'' +
-                ", admin_role='" + admin_role + '\'' +
                 '}';
     }
 }

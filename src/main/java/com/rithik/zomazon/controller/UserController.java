@@ -18,7 +18,7 @@ public class UserController {
     UserService userService = UserService.getInstance();
 
     @GET
-    @RolesAllowed({"ADMIN","SUPER"})
+    @RolesAllowed("ADMIN")
     @Produces(MediaType.APPLICATION_JSON)
     public List<User> getAllUsers(){
         List<User> allUsers = userService.getAllUsers();
@@ -27,7 +27,7 @@ public class UserController {
     }
 
     @GET
-    @RolesAllowed({"ADMIN","SUPER","USER"})
+    @RolesAllowed({"ADMIN","USER"})
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public User getAdminById(@PathParam("id") String id){
@@ -37,7 +37,7 @@ public class UserController {
     }
 
     @POST
-    @RolesAllowed({"ADMIN","SUPER","USER"})
+    @RolesAllowed({"ADMIN","USER"})
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public User createUser(User body){

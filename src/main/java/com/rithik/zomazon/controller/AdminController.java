@@ -22,18 +22,7 @@ public class AdminController {
     @GET
     @RolesAllowed("ADMIN")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllAdmins(){
-        System.out.println("in admin 1");
-        List<Admin> allAdmins = adminService.getAllAdmins();
-        System.out.println("All Admins : "+allAdmins);
-        return Response.ok(allAdmins).header("Test","Success").build();
-    }
-
-    @GET
-    @RolesAllowed("ADMIN")
-    @Path("/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAdminById(@PathParam("id") String id){
+    public Response getAdmin(@QueryParam("adminId") String id){
         System.out.println("in admin 2");
         Admin admin = adminService.getAdminById(id);
         System.out.println("Admin by id ("+id+") : "+admin);

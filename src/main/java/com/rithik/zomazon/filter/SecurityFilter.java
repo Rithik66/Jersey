@@ -5,16 +5,15 @@ import com.rithik.zomazon.services.Connector;
 import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.ws.rs.container.ContainerRequestContext;
-import jakarta.ws.rs.container.ContainerRequestFilter;
-import jakarta.ws.rs.container.ResourceInfo;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.MultivaluedMap;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.UriInfo;
+import jakarta.ws.rs.container.*;
+import jakarta.ws.rs.core.*;
 import jakarta.ws.rs.ext.Provider;
+import org.glassfish.jersey.server.Uri;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -27,12 +26,13 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 @Provider
-public class SecurityFilter implements ContainerRequestFilter {
+public class SecurityFilter implements ContainerRequestFilter, ContainerResponseFilter {
     private static final Response ACCESS_DENIED = Response.status(Response.Status.UNAUTHORIZED).build();
     private static final Response ACCESS_FORBIDDEN = Response.status(Response.Status.FORBIDDEN).build();
     private static final Response SERVER_ERROR = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
 
     private static String role;
+    private static String admin_id;
 
     @Context
     private UriInfo uriInfo;
@@ -55,6 +55,7 @@ public class SecurityFilter implements ContainerRequestFilter {
                 requestContext.abortWith(ACCESS_DENIED);
                 return;
             }
+
             final String encodedUserPassword = authorization.get(0).replaceFirst( "Basic ", "");
             StringTokenizer tokenizer = null;
             try{
@@ -84,10 +85,13 @@ public class SecurityFilter implements ContainerRequestFilter {
                         requestContext.abortWith(ACCESS_DENIED);
                     }
                     System.out.println("Allowed");
+
                 }
             }
         }
     }
+
+
     private boolean isUserAllowed(Set<String> rolesSet){
         boolean isAllowed = false;
         System.out.println("Roles : "+rolesSet);
@@ -96,18 +100,20 @@ public class SecurityFilter implements ContainerRequestFilter {
         }
         return isAllowed;
     }
+
     private boolean isValidEntry(String username,String password){
         try {
             role=null;
             Connection connection = Connector.getInstance();
-            PreparedStatement preparedStatement = connection.prepareStatement("select admin_role from postgres.public.admin where admin_email = ? and admin_pass = ?");
+            PreparedStatement preparedStatement = connection.prepareStatement("select * from postgres.public.admin where admin_email = ? and admin_pass = ?");
             preparedStatement.setString(1,username);
             preparedStatement.setString(2,password);
             System.out.println(username+" "+password);
             ResultSet resultSet = preparedStatement.executeQuery();
             System.out.println("check 1");
             while (resultSet.next()) {
-                role=resultSet.getString(1);
+                admin_id = resultSet.getString(1);
+                role = "ADMIN";
                 System.out.println(role);
             }
             if(role==null){
@@ -133,5 +139,9 @@ public class SecurityFilter implements ContainerRequestFilter {
             System.out.println("error : getUserById");
         }
         return false;
+    }
+    @Override
+    public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) throws IOException {
+
     }
 }
